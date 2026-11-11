@@ -1,0 +1,19 @@
+{
+  "name": "qr-code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@zxing/library": "^0.23.0",
+    "jsqr": "^1.4.0",
+    "playwright-core": "^1.65.0",
+    "qr-code-styling": "^1.9.2"
+  }
+}

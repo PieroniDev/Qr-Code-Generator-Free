@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gerador de QR Code</title>
+  <meta name="description" content="Crie QR Codes personalizados que nunca expiram. Grátis, sem cadastro; baixe em PNG, JPG ou SVG.">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23111'/%3E%3Cpath d='M3 3h4v4H3zM9 3h4v4H9zM3 9h4v4H3zM9 9h2v2H9zM11 11h2v2h-2z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>QR Code</span>
+    </div>
+    <p class="tagline">Grátis, sem cadastro e sem prazo de validade.</p>
+  </header>
+
+  <main class="app">
+    <section class="controls" aria-label="Configurações do QR Code">
+
+      <div class="group">
+        <label class="label" for="data">Link ou texto</label>
+        <textarea id="data" rows="2" maxlength="2000" spellcheck="false" autocomplete="off"
+          placeholder="https://seusite.com.br"></textarea>
+        <p class="hint" id="dataHint" aria-live="polite"></p>
+      </div>
+
+      <div class="group">
+        <h2 class="label">Cores</h2>
+        <div class="colors">
+          <div class="color-field">
+            <span class="sub">Pontos</span>
+            <div class="color-input">
+              <input type="color" id="dotsColor" value="#000000" aria-label="Cor dos pontos">
+              <input type="text" class="hex" data-for="dotsColor" maxlength="7" spellcheck="false" aria-label="Cor dos pontos em hexadecimal">
+            </div>
+          </div>
+          <div class="color-field" id="gradientColorField" hidden>
+            <span class="sub">Degradê até</span>
+            <div class="color-input">
+              <input type="color" id="dotsColor2" value="#2b59ff" aria-label="Segunda cor do degradê">
+              <input type="text" class="hex" data-for="dotsColor2" maxlength="7" spellcheck="false" aria-label="Segunda cor em hexadecimal">
+            </div>
+          </div>
+          <div class="color-field">
+            <span class="sub">Fundo</span>
+            <div class="color-input">
+              <input type="color" id="bgColor" value="#ffffff" aria-label="Cor do fundo">
+              <input type="text" class="hex" data-for="bgColor" maxlength="7" spellcheck="false" aria-label="Cor do fundo em hexadecimal">
+            </div>
+          </div>
+          <div class="color-field" id="cornerColorField" hidden>
+            <span class="sub">Cantos</span>
+            <div class="color-input">
+              <input type="color" id="cornerColor" value="#000000" aria-label="Cor dos cantos">
+              <input type="text" class="hex" data-for="cornerColor" maxlength="7" spellcheck="false" aria-label="Cor dos cantos em hexadecimal">
+            </div>
+          </div>
+        </div>
+        <div class="toggles">
+          <label class="check"><input type="checkbox" id="useGradient"> Degradê</label>
+          <select id="gradientType" aria-label="Tipo de degradê" hidden>
+            <option value="linear">Linear</option>
+            <option value="radial">Radial</option>
+          </select>
+          <label class="check"><input type="checkbox" id="customCorners"> Cantos com outra cor</label>
+          <label class="check"><input type="checkbox" id="transparentBg"> Fundo transparente</label>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2 class="label">Pontos</h2>
+        <div class="styles" id="dotStyles" role="radiogroup" aria-label="Estilo dos pontos"></div>
+      </div>
+
+      <div class="group two">
+        <div>
+          <h2 class="label">Moldura dos cantos</h2>
+          <div class="styles small" id="cornerSquareStyles" role="radiogroup" aria-label="Estilo da moldura dos cantos"></div>
+        </div>
+        <div>
+          <h2 class="label">Centro dos cantos</h2>
+          <div class="styles small" id="cornerDotStyles" role="radiogroup" aria-label="Estilo do centro dos cantos"></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2 class="label">Logo no centro</h2>
+        <div class="logo-row">
+          <label class="button ghost file">
+            <input type="file" id="logoFile" accept="image/png,image/jpeg,image/svg+xml,image/webp">
+            <span id="logoLabel">Escolher imagem</span>
+          </label>
+          <button type="button" class="button ghost" id="logoRemove" hidden>Remover</button>
+        </div>
+        <div class="range-field" id="logoSizeField" hidden>
+          <label class="sub" for="logoSize">Tamanho do logo</label>
+          <input type="range" id="logoSize" min="0.15" max="0.5" step="0.01" value="0.35">
+          <output id="logoSizeOut" for="logoSize"></output>
+        </div>
+        <label class="check" id="logoHideField" hidden><input type="checkbox" id="logoHideDots" checked> Limpar pontos atrás do logo</label>
+      </div>
+
+      <div class="group two">
+        <div class="range-field">
+          <label class="sub" for="margin">Margem</label>
+          <input type="range" id="margin" min="0" max="0.15" step="0.01" value="0.06">
+          <output id="marginOut" for="margin"></output>
+        </div>
+        <div>
+          <label class="sub" for="ecc">Correção de erros</label>
+          <select id="ecc">
+            <option value="L">Baixa (7%)</option>
+            <option value="M">Média (15%)</option>
+            <option value="Q">Alta (25%)</option>
+            <option value="H" selected>Máxima (30%)</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="reset" id="reset">Restaurar padrão</button>
+    </section>
+
+    <aside class="output" aria-label="Pré-visualização e download">
+      <div class="preview-card">
+        <div class="preview" id="preview" data-empty="true">
+          <div id="qr"></div>
+        </div>
+        <p class="warning" id="warning" role="status" hidden></p>
+      </div>
+
+      <div class="download">
+        <div class="download-size">
+          <label class="sub" for="exportSize">Tamanho da imagem</label>
+          <select id="exportSize">
+            <option value="512">512 px</option>
+            <option value="1024">1024 px</option>
+            <option value="2048" selected>2048 px</option>
+            <option value="4096">4096 px</option>
+          </select>
+        </div>
+        <div class="download-buttons">
+          <button type="button" class="button primary" data-format="png">PNG</button>
+          <button type="button" class="button" data-format="jpg">JPG</button>
+          <button type="button" class="button" data-format="svg">SVG</button>
+        </div>
+        <p class="hint">SVG é vetor: amplia sem perder qualidade, ideal para gráfica. PNG e JPG saem em 300 dpi.</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="foot">
+    <p>O conteúdo fica gravado no próprio QR Code, por isso ele nunca expira e não depende deste site.
+      Tudo é gerado no seu navegador: nada é enviado nem guardado.</p>
+  </footer>
+
+  <script src="vendor/qr-code-styling.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
